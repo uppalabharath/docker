@@ -1,0 +1,104 @@
+deploymentType: dev
+debug: true
+enable_pprof: true
+es:
+  host: "es.127.0.0.1.xip.io"
+  port: "80"
+  scheme: "http"
+logging:
+  level: debug
+  logAsJson: true
+
+# run ssh rdstunnel
+config_database:
+  type: postgres
+  host: "localhost"
+  port: "30532"
+  user: "postgres"
+  password: postgres
+data_warehouse:
+  type: postgres
+  host: "localhost"
+  port: "30532"
+  user: "postgres"
+  password: postgres
+# run ssh rdspdtunnel
+pddb:
+  type: postgres
+  host: "localhost"
+  port: "30532"
+  user: "postgres"
+  password: postgres
+taskprocessor:
+  generic:
+    queue: custom-generic-tasks.fifo
+  broker_type: "redis"
+  default_queue: "foundri-dev-generic-tasks.fifo"
+  tasks:
+    generic:
+      queue: foundri-dev-generic-tasks.fifo
+    emailservice:
+      queue: "email-tasks"
+  sqs:
+    endpoint: https://us-west-2.queue.amazonaws.com/251337915507
+    region: us-west-2
+  redis:
+    port: 30479
+    host: localhost
+mattermost:
+  # run ssh mmtunnel
+  server: "http://mattermost.127.0.0.1.xip.io"
+  authType: "password"
+  authToken: "gw6sxgmcmpb4jqkpaftnd6agjh"
+  adminUser: "messaging-admin@securiti.ai"
+  adminPassword: "Securiti@123"
+encryption_keys:
+  # right now the provider of this value doesn't support list and thus it'll send us a comma seperated string.
+  - key_2019_02_09
+vault:
+  encryption_keys:
+    key_2019_02_09: 9Obhs50sLBI2bW5Hs4JIgqra58IFn6v4
+
+secret_store:
+  type: config
+emailservice:
+  retry_limit: 3
+  backoff_time: 10
+  blacklist_manager:
+    enabled: false
+    db_host: localhost
+    db_port: 30532
+    db_user: postgres
+    db_password: postgres
+    db_name: email_ops
+  template_directory: "/Data/code/privaci/priv/templates/email_templates"
+
+  timeout: 60 # Time out for email connection default is 60 sec
+
+  emailS3Threshold:
+    size: 256
+    unit: KB # Unit can be KB, MB or B
+  sender:
+    email: noreply@securiti.ai
+    name: Test Service
+    whitelist:
+      disabled: true
+      domains:
+        - "*securiti.ai"
+        - "securiti.org"
+        - "securiti.com"
+        - "ai-powered.net"
+    blacklist:
+      domains:
+        - "testdomain.com"
+      emails:
+        securiti.ai:
+          - "noreply*@securiti.ai"
+  smtp:
+    # start local mailhog by running command:
+    # docker run -p 1025:1025 -p 8025:8025 mailhog/mailhog
+    host: localhost
+    port: 30587
+    
+  whitelist:
+    disabled: true

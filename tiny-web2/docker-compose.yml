@@ -1,0 +1,11 @@
+#vesrion of the docker-compose
+version: '3'
+# services -- to specify the containers we need
+# all the services started are automatically created in a network
+services: 
+  redis-server: #name of service
+    image: 'redis' # create container using specifed image
+  tiny-web2-app:
+    build: . #specifying to build the container using the Dockerfile in this directory
+    ports: # - specifies an array in yml srcport on computer : dst port on container
+      - "4001:9900"
